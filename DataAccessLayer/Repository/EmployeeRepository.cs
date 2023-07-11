@@ -32,9 +32,8 @@ namespace DataAccessLayerP22.Repository
                 _context.SaveChanges();
                 _logger.Log("New Employees added in DB");
             }
-
-            var employeeViewModels = GetAllEmployees().Cast<EmployeeAddVM>();
-            return employeeViewModels;
+            var employeeViewModel = _mapper.Map<Employee, EmployeeAddVM>(employee);
+            return new List<EmployeeAddVM> { employeeViewModel };
         }
     
 
