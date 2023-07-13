@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediatorPatternP25", "MediatorPatternP25\MediatorPatternP25.csproj", "{3A76D0E6-D861-4F08-8C0F-DB900782CE32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorPattern", "MediatorPattern\MediatorPattern.csproj", "{8FD4D5D0-00E7-43B4-83E3-B7626C36821F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3A76D0E6-D861-4F08-8C0F-DB900782CE32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A76D0E6-D861-4F08-8C0F-DB900782CE32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A76D0E6-D861-4F08-8C0F-DB900782CE32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD4D5D0-00E7-43B4-83E3-B7626C36821F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD4D5D0-00E7-43B4-83E3-B7626C36821F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD4D5D0-00E7-43B4-83E3-B7626C36821F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD4D5D0-00E7-43B4-83E3-B7626C36821F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
