@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using BAL.AbstractFactory;
-using BAL.Factory;
-using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using FactoryPatternP23.Dto;
 using FactoryPatternP23.Interface;
 using FactoryPatternP23.Model;
+using BusinessAccessLayerP23.Interfaces;
+using BusinessAccessLayerP23.AbstractFactory;
+using BusinessAccessLayerP23.Factory;
+using Practical23_API.ViewModel;
 
 namespace FactoryPatternP23.Controllers
 {
@@ -15,7 +16,7 @@ namespace FactoryPatternP23.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IEmployeeRepository _employeeRepository;
-   
+
         public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
@@ -23,27 +24,27 @@ namespace FactoryPatternP23.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployees()
+        public ActionResult<IEnumerable<EmployeeVM>> GetEmployees()
         {
-            var employees = await _employeeRepository.GetEmployees();
-            return Ok(_mapper.Map<IEnumerable<EmployeeDto>>(employees));
+            var employees = _employeeRepository.GetEmployees();
+            return Ok(_mapper.Map<IEnumerable<EmployeeVM>>(employees));
         }
 
         [HttpGet("{id:int}", Name = "GetEmployeeById")]
-        public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int id)
+        public ActionResult<EmployeeVM> GetEmployeeById(int id)
         {
-            var employee = await _employeeRepository.GetEmployeeById(id);
+            var employee = _employeeRepository.GetEmployeeById(id);
             if (employee != null)
             {
-                return Ok(_mapper.Map<EmployeeDto>(employee));
+                return Ok(_mapper.Map<EmployeeVM>(employee));
             }
             return NotFound();
         }
 
         [HttpGet("{id:int}/{hours:int}")]
-        public async Task<ActionResult<EmployeeDtoHourBonus>> GetOvertimePay(int id, int hours)
+        public ActionResult<EmployeeHourBonusVM> GetOvertimePay(int id, int hours)
         {
-            var employee = await _employeeRepository.GetEmployeeById(id);
+            var employee = _employeeRepository.GetEmployeeById(id);
             if (employee == null)
             {
                 return NotFound();
@@ -53,14 +54,14 @@ namespace FactoryPatternP23.Controllers
             {
                 case Department.IT:
                     department = new ITFactory().CreateDepartment();
-                    break;  
+                    break;
                 case Department.Sales:
                     department = new SalesFactory().CreateDepartment();
                     break;
                 default:
                     break;
             }
-            var employeeHourBouns = _mapper.Map<EmployeeDtoHourBonus>(employee);
+            var employeeHourBouns = _mapper.Map<EmployeeHourBonusVM>(employee);
             employeeHourBouns.Hours = hours;
             if (department != null)
             {
@@ -69,36 +70,46 @@ namespace FactoryPatternP23.Controllers
             return Ok(employeeHourBouns);
         }
 
-    
+
         [HttpPost]
-        public async Task<IActionResult> AddEmployee(CreateEmployeeDto createEmployee)
+        public IActionResult AddEmployee(CreateEmployeeVM createEmployee)
         {
             if (ModelState.IsValid)
             {
                 var insertEmployee = _mapper.Map<Employee>(createEmployee);
-                await _employeeRepository.AddEmployee(insertEmployee);
-                var addedEmployee = _mapper.Map<EmployeeDto>(insertEmployee);
+                _employeeRepository.AddEmployee(insertEmployee);
+                var addedEmployee = _mapper.Map<EmployeeVM>(insertEmployee);
                 return Ok(addedEmployee);
             }
-           return BadRequest();
-        }        
+            return BadRequest();
+        }
+        [HttpPut]
+        public IActionResult UpdateEmployee(UpdateVM updateEmployee) 
+        {
+            if (ModelState.IsValid)
+            {
+               var updatedEmployee = _employeeRepository.UpdateEmployee(updateEmployee);
+                return Ok(updatedEmployee);
+            }
+            return BadRequest();
+        }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult<EmployeeDto>> DeleteEmployee(int id)
+        public ActionResult<Employee> DeleteEmployee(int id)
         {
-            var employeeEntity = await _employeeRepository.GetEmployeeById(id);
-            if (employeeEntity is null)
+            var employeeEntity = _employeeRepository.GetEmployeeById(id);
+            if (employeeEntity !=null)
             {
-                return NotFound();
+                return _employeeRepository.DeleteEmployee(employeeEntity);
             }
-            await _employeeRepository.DeleteEmployee(employeeEntity);
+            
             return NoContent();
         }
 
         [HttpGet("{id:int}/abstract/hours/{hours:int}")]
-        public async Task<ActionResult<EmployeeDtoHourBonus>> GetOvertimePayUsingAbstract(int id, int hours)
+        public ActionResult<EmployeeHourBonusVM> GetOvertimePayUsingAbstract(int id, int hours)
         {
-            var employee = await _employeeRepository.GetEmployeeById(id);
+            var employee = _employeeRepository.GetEmployeeById(id);
             if (employee is null)
             {
                 return NotFound();
@@ -128,7 +139,7 @@ namespace FactoryPatternP23.Controllers
                 default:
                     break;
             }
-            var employeeHourBouns = _mapper.Map<EmployeeDtoHourBonus>(employee);
+            var employeeHourBouns = _mapper.Map<EmployeeHourBonusVM>(employee);
             employeeHourBouns.Hours = hours;
             if (department is not null)
             {

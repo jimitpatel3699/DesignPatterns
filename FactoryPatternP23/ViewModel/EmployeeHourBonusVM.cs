@@ -2,7 +2,7 @@
 
 namespace FactoryPatternP23.Dto
 {
-    public class EmployeeDtoHourBonus
+    public class EmployeeHourBonusVM
     {
         public int Id { get; set; }
         public string Name { get; set; }

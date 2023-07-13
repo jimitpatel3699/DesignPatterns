@@ -1,9 +1,10 @@
 ﻿using FactoryPatternP23.Model;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace FactoryPatternP23.Dto
 {
-    public class UpdateEmployeeDto
+    public class CreateEmployeeVM
     {
         [Required]
         public string Name { get; set; }
@@ -13,14 +14,13 @@ namespace FactoryPatternP23.Dto
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         public DateTime JoiningDate { get; set; }
 
         [Required]
+        [EnumDataType(typeof(Department))]
         public Department DepartmentId { get; set; }
-
-        public bool Status { get; set; } = false;
     }
 }

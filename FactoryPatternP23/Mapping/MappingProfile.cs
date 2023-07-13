@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FactoryPatternP23.Dto;
 using FactoryPatternP23.Model;
+using Practical23_API.ViewModel;
 
 namespace FactoryPatternP23.Mapping
 {
@@ -8,17 +9,17 @@ namespace FactoryPatternP23.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<EmployeeDto, Employee>();
-            CreateMap<Employee, EmployeeDto>();
+            CreateMap<EmployeeVM, Employee>();
+            CreateMap<Employee, EmployeeVM>();
 
-            CreateMap<CreateEmployeeDto, Employee>();
-            CreateMap<Employee, CreateEmployeeDto>();
+            CreateMap<CreateEmployeeVM, Employee>();
+            CreateMap<Employee, CreateEmployeeVM>();
 
-            CreateMap<UpdateEmployeeDto, Employee>();
-            CreateMap<Employee, UpdateEmployeeDto>();
+            CreateMap<UpdateEmployeeVM, Employee>();
+            CreateMap<Employee, UpdateEmployeeVM>();
 
-            CreateMap<Employee, EmployeeDtoHourBonus>();
-
+            CreateMap<Employee, EmployeeHourBonusVM>();
+            CreateMap<Employee,UpdateVM>().ReverseMap();
         }
     }
 }

@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BAL\BAL.csproj" />
     <ProjectReference Include="..\BusinessAccessLayerP23\BusinessAccessLayerP23.csproj" />
   </ItemGroup>
 

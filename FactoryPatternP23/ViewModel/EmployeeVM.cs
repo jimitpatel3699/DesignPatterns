@@ -2,7 +2,7 @@
 
 namespace FactoryPatternP23.Dto
 {
-    public class EmployeeDto
+    public class EmployeeVM
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -10,6 +10,6 @@ namespace FactoryPatternP23.Dto
         public string Email { get; set; }
         public DateTime JoiningDate { get; set; }
         public Department DepartmentId { get; set; }
-        public bool Status { get; set; } = false;
+        public bool Isdeleted { get; set; } = false;
     }
 }

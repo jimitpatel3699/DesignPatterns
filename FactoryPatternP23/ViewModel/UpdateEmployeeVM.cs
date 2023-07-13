@@ -1,10 +1,10 @@
 ﻿using FactoryPatternP23.Model;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace FactoryPatternP23.Dto
 {
-    public class CreateEmployeeDto
+    public class UpdateEmployeeVM
     {
         [Required]
         public string Name { get; set; }
@@ -14,12 +14,15 @@ namespace FactoryPatternP23.Dto
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         public DateTime JoiningDate { get; set; }
 
         [Required]
+        [EnumDataType(typeof(Department))]
         public Department DepartmentId { get; set; }
+        [ValidateNever]
+        public bool Isdeleted { get; set; } = false;
     }
 }
