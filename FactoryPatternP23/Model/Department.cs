@@ -2,9 +2,9 @@
 {
     public enum Department
     {
-        IT,
-        HR,
+        IT=1,
         Sales,
+        HR,
         OnSite
     }
 }

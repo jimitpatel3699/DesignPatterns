@@ -40,37 +40,6 @@ namespace FactoryPatternP23.Controllers
             }
             return NotFound();
         }
-
-        [HttpGet("{id:int}/{hours:int}")]
-        public ActionResult<EmployeeHourBonusVM> GetOvertimePay(int id, int hours)
-        {
-            var employee = _employeeRepository.GetEmployeeById(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            IDepartment? department = null;
-            switch (employee.DepartmentId)
-            {
-                case Department.IT:
-                    department = new ITFactory().CreateDepartment();
-                    break;
-                case Department.Sales:
-                    department = new SalesFactory().CreateDepartment();
-                    break;
-                default:
-                    break;
-            }
-            var employeeHourBouns = _mapper.Map<EmployeeHourBonusVM>(employee);
-            employeeHourBouns.Hours = hours;
-            if (department != null)
-            {
-                employeeHourBouns.Bouns = department.CalculateOvertime(hours);
-            }
-            return Ok(employeeHourBouns);
-        }
-
-
         [HttpPost]
         public IActionResult AddEmployee(CreateEmployeeVM createEmployee)
         {
@@ -105,7 +74,36 @@ namespace FactoryPatternP23.Controllers
             
             return NoContent();
         }
-
+        //factorypattern
+        [HttpGet("{id:int}/{hours:int}")]
+        public ActionResult<EmployeeHourBonusVM> GetOvertimePay(int id, int hours)
+        {
+            var employee = _employeeRepository.GetEmployeeById(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            IDepartment? department = null;
+            switch (employee.DepartmentId)
+            {
+                case Department.IT:
+                    department = new ITFactory().CreateDepartment();
+                    break;
+                case Department.Sales:
+                    department = new SalesFactory().CreateDepartment();
+                    break;
+                default:
+                    break;
+            }
+            var employeeHourBouns = _mapper.Map<EmployeeHourBonusVM>(employee);
+            employeeHourBouns.Hours = hours;
+            if (department != null)
+            {
+                employeeHourBouns.Bouns = department.CalculateOvertime(hours);
+            }
+            return Ok(employeeHourBouns);
+        }
+        //abstract factory method
         [HttpGet("{id:int}/abstract/hours/{hours:int}")]
         public ActionResult<EmployeeHourBonusVM> GetOvertimePayUsingAbstract(int id, int hours)
         {
