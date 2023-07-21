@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AbstractFactoryPattern
 {
-    internal class ICourse
+    public interface ICourse
     {
+        string GetCourseName();
+        int GetCourseFee();
+        string GetCourseDuration();
     }
 }
