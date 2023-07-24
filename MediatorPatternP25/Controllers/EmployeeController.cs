@@ -18,7 +18,7 @@ namespace MediatorPatternP25.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             ValidateEmployee validation = new ValidateEmployee();
             ValidationResult result = validation.Validate(employee);
@@ -26,63 +26,34 @@ namespace MediatorPatternP25.Controllers
             {
                 CreateEmployee command = new CreateEmployee() { Name = employee.Name, Email = employee.Email, Salary = employee.Salary, DepartmentId = employee.DepartmentId };
 
-                return _mediator.Send(command).ContinueWith(task =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                    {
-                        return Ok(task.Result);
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
-                });
+                return Ok(await _mediator.Send(command));
             }
-            return BadRequest();
+            return BadRequest(result.Errors.Select(item => new { item.PropertyName, item.ErrorMessage }));
+
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return _mediator.Send(new GetAllEmployees()).ContinueWith(task =>
-            {
-                if (task.IsCompletedSuccessfully)
-                {
-                    return Ok(task.Result);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            });
+            return Ok(await _mediator.Send(new GetAllEmployees())); ;
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return _mediator.Send(new GetEmployeeById { Id = id }).ContinueWith(task =>
+            var emp = await _mediator.Send(new GetEmployeeById { Id = id });
+            if (emp != null)
             {
-                if (task.IsCompletedSuccessfully)
-                {
-                    var emp = task.Result;
-                    if (emp != null)
-                    {
-                        return Ok(emp);
-                    }
-                    else
-                    {
-                        return NotFound("Employee with this id could not be found");
-                    }
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            });
+                return Ok(emp);
+            }
+            else
+            {
+                return NotFound("Employee with this id could not be found");
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Employee employee)
+        public async Task<IActionResult> Update(int id, Employee employee)
         {
             ValidateEmployee validation = new ValidateEmployee();
             ValidationResult result = validation.Validate(employee);
@@ -90,47 +61,21 @@ namespace MediatorPatternP25.Controllers
             {
                 UpdateEmployee command = new UpdateEmployee() { Id = id, Name = employee.Name, Email = employee.Email, Salary = employee.Salary, DepartmentId = employee.DepartmentId };
 
-                return _mediator.Send(command).ContinueWith(task =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                    {
-                        return Ok(task.Result);
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
-                });
+                return Ok(await _mediator.Send(command));
+            }
+            return BadRequest(result.Errors.Select(item => new { item.PropertyName, item.ErrorMessage }));
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = GetById(id);
+            if (result != null)
+            {
+                DeleteEmployee command = new DeleteEmployee() { Id = id };
+
+                return Ok(await _mediator.Send(command));
             }
             return BadRequest();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            return GetById(id).ContinueWith(task =>
-            {
-                if (task.IsCompletedSuccessfully)
-                {
-                    var result = task.Result;
-                    if (result != null)
-                    {
-                        DeleteEmployee command = new DeleteEmployee() { Id = id };
-                        return _mediator.Send(command).ContinueWith(deleteTask =>
-                        {
-                            if (deleteTask.IsCompletedSuccessfully)
-                            {
-                                return Ok(deleteTask.Result);
-                            }
-                            else
-                            {
-                                return BadRequest();
-                            }
-                        });
-                    }
-                }
-                return BadRequest();
-            });
         }
     }
 }
